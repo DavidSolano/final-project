@@ -11,7 +11,7 @@ const LogIn = (props) => {
 
     let loginWithPsswd = async () => {
         setVisible(true)
-        await props.LoginWithEandP(emailValue, setEmailValue)
+        await props.LoginWithEandP(emailValue, passwordValue)
         setVisible(false)
     }
 
@@ -42,6 +42,7 @@ const LogIn = (props) => {
                         paddingVertical: 10,
                         paddingHorizontal: 20,
                         margin: 20,
+                        textAlign: 'center',
                         borderRadius: 10}}
                         onPress={() => {loginWithPsswd()}}>Sign-In</Text>
                 </TouchableOpacity>

@@ -1,9 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react'
 
-import {Button, Text, SafeAreaView, StyleSheet, View, TextInput, TouchableOpacity} from "react-native";
-import User from "../Models/User";
+import {Button, Text, SafeAreaView, StyleSheet, View, TextInput, TouchableOpacity} from "react-native"
+import User from "../Models/User"
+import SignUp, {SignUpThing} from './SignUp';
+import {LogIn} from './LogIn';
 import {auth, firebase} from '../firebaseConfig';
-import {SignUp} from './SignUp';
+import {NavigationContainer} from "@react-navigation/native";
+import {createDrawerNavigator} from "@react-navigation/drawer";
+import {Card} from "@ui-kitten/components";
 
 let AccountScreen = (props) => {
     let [user, setUser] = useState();
@@ -23,7 +27,6 @@ let AccountScreen = (props) => {
                 var user = userCredentials.user;
                 setUser(new User(user))
                 setUserLoggedIn(true);
-                props.getUser();
             }).catch((e) => {
                 console.log("logging in failed", e)
             })
@@ -35,22 +38,10 @@ let AccountScreen = (props) => {
                 var user = userCredentials.user;
                 setUser(new User(user))
                 setUserLoggedIn(true);
-                props.getUser();
             }).catch((e) => {
                 console.log("Signing up failed", e)
             })
     }
-
-    /*let setUserName = async () => {
-        const userUpdate = firebase.auth().currentUser;
-
-        await userUpdate.updateProfile({
-            displayName: nameThing,
-        })
-
-        props.getUser()
-        setUser(props.user)
-    }*/
 
     let LogOut = async () => {
         await firebase.auth().signOut()
@@ -61,19 +52,41 @@ let AccountScreen = (props) => {
     if (userLoggedIn){
         return(
             <SafeAreaView>
-                <Text style={{marginTop: 20, marginBottom: 5, color: '#000'}} category='h6'>{user.email}</Text>
+                <Card style={{marginTop: 50, marginBottom: 20}}>
+                    <Text style={{marginTop: 20, marginBottom: 5, color: '#000', fontSize: 15}}>User Email:</Text>
+                    <Text style={{marginTop: 20, marginBottom: 5, color: '#000', fontSize: 20}}>{user.email}</Text>
+                </Card>
+
 
                 <TouchableOpacity onPress={LogOut}>
-                    <Text>Log Out</Text>
+                    <Text style={{
+                        backgroundColor: '#273296',
+                        color: '#FFF',
+                        paddingVertical: 10,
+                        paddingHorizontal: 30,
+                        margin: 30,
+                        textAlign: 'center',
+                        borderRadius: 10}}>Log Out</Text>
                 </TouchableOpacity>
             </SafeAreaView>
         )
     } else {
+        const Drawer = createDrawerNavigator();
+
         return (
-            <SafeAreaView>
-                <Button title='Sign up' />
-                <Button title='log In' />
-            </SafeAreaView>
+            <NavigationContainer independent={true}>
+                <Drawer.Navigator initialRouteName="Sign Up">
+                    <Drawer.Screen SignUpWithEandP={SignUpWithEandP}
+                                   children={() => <SignUpThing SignUpWithEandP={SignUpWithEandP}/>}
+                                   name="Sign Up"
+                                    />
+
+                    <Drawer.Screen LoginWithEandP={LoginWithEandP}
+                                   children={() => <LogIn LoginWithEandP={LoginWithEandP}/>}
+                                   name='Log In'
+                                    />
+                </Drawer.Navigator>
+            </NavigationContainer>
         )
     }
 }

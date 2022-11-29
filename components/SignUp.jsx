@@ -44,6 +44,7 @@ const SignUpThing = (props) => {
                         paddingVertical: 10,
                         paddingHorizontal: 30,
                         margin: 30,
+                        textAlign: 'center',
                         borderRadius: 10}}
                         onPress={() => {SignUpWithPwsd()}}>Sign-In</Text>
                 </TouchableOpacity>
