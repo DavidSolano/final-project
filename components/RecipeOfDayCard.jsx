@@ -4,8 +4,8 @@ import {Button, Card, Text, Modal} from '@ui-kitten/components';
 import axios from "axios";
 import {db} from "../firebaseConfig";
 
-const RecipeCard = (props) => {
-    const [visible, setVisible] = React.useState(false);
+const RecipeOfDayCard = (props) => {
+    let [visible, setVisible] = useState(false);
     let [aVisible, setAVisible] = useState(false);
     let [ingredient, setIngredients] = useState();
     let [instruction, setInstructions] = useState();
@@ -166,4 +166,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export {RecipeCard}
+export {RecipeOfDayCard}

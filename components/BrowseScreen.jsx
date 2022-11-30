@@ -1,12 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import axios from 'axios';
-import {Button, Text, SafeAreaView, StyleSheet, FlatList, View, Image} from "react-native";
+import {Button, StyleSheet, FlatList, View, Image} from "react-native";
 import { SearchBarThing } from './SearchBarThing';
-import {Card, Modal} from "@ui-kitten/components";
 import {RecipeCard} from "./RecipeCards";
 
 
-let BrowseScreen = ({navigation}) => {
+let BrowseScreen = (props) => {
 
     let [recipes, setRecipes] = useState();
     let [visible, setVisible] = useState(false);
@@ -14,11 +13,9 @@ let BrowseScreen = ({navigation}) => {
 
     const baseUrl = 'https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch'
 
-
-
     const renderItem = ({ item }) => (
         <View style={{width: '100%'}}>
-            <RecipeCard item={item}></RecipeCard>
+            <RecipeCard user={props.user} item={item}></RecipeCard>
         </View>
     );
 

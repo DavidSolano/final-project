@@ -1,15 +1,19 @@
-let User = function(firebaseUser){
-    let x = {
+let User = function (firebaseUser) {
+    let m = {
         displayName: '',
         email: '',
+        photoURL: '',
+        uid: '',
     }
 
-    if(firebaseUser){
-        x.displayName = firebaseUser.displayName ? firebaseUser.displayName : '';
-        x.email = firebaseUser.email ? firebaseUser.email : '';
+    if (firebaseUser) {
+        m.displayName = firebaseUser.displayName ? firebaseUser.displayName : '';
+        m.email = firebaseUser.email ? firebaseUser.email : '';
+        m.photoURL = firebaseUser.photoURL ? firebaseUser.photoURL : '';
+        m.uid = firebaseUser.uid ? firebaseUser.uid : '';
     }
 
-    return x;
+    return m;
 }
 
 export default User;

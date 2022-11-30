@@ -14,19 +14,13 @@ let AccountScreen = (props) => {
     let [userLoggedIn, setUserLoggedIn] = useState(false)
     let [nameThing, setNameThing] = useState();
 
-    let setUserMan = () => {
-        if (props.user !== null){
-            setUser(props.user)
-            setUserLoggedIn(true)
-        }
-    }
-
     let LoginWithEandP = async (email, password) => {
         let god = await firebase.auth().signInWithEmailAndPassword(email, password)
             .then((userCredentials) => {
                 var user = userCredentials.user;
                 setUser(new User(user))
                 setUserLoggedIn(true);
+                props.getUser()
             }).catch((e) => {
                 console.log("logging in failed", e)
             })
@@ -38,6 +32,7 @@ let AccountScreen = (props) => {
                 var user = userCredentials.user;
                 setUser(new User(user))
                 setUserLoggedIn(true);
+                props.getUser()
             }).catch((e) => {
                 console.log("Signing up failed", e)
             })
@@ -49,12 +44,18 @@ let AccountScreen = (props) => {
         await props.getUser();
     }
 
-    if (userLoggedIn){
+
+    useEffect(() => {
+        props.getUser()
+        setUser(props.user)
+    },[])
+
+    if (props.user !== null){
         return(
             <SafeAreaView>
                 <Card style={{marginTop: 50, marginBottom: 20}}>
                     <Text style={{marginTop: 20, marginBottom: 5, color: '#000', fontSize: 15}}>User Email:</Text>
-                    <Text style={{marginTop: 20, marginBottom: 5, color: '#000', fontSize: 20}}>{user.email}</Text>
+                    <Text style={{marginTop: 20, marginBottom: 5, color: '#000', fontSize: 20}}>{props.user.email}</Text>
                 </Card>
 
 
