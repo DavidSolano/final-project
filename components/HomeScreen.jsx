@@ -1,78 +1,71 @@
 import React, {useEffect, useState} from 'react'
 
-import {Button, Text, SafeAreaView, StyleSheet, View, ScrollView, TouchableOpacity, FlatList} from "react-native"
+import {Text, StyleSheet, View, ScrollView, TouchableOpacity} from "react-native"
 import axios from "axios";
 import {RecipeOfDayCard} from "./RecipeOfDayCard";
-import {Card, Modal} from "@ui-kitten/components";
-import {db} from "../firebaseConfig";
 
 const HomeScreen = (props) => {
     let [visible, setVisible] = useState(false);
     let [randomRecipe, setRandomRecipe] = useState();
-
-    const renderItem = ({item}) => (
-        <View style={{width: '100%'}}>
-            <RecipeOfDayCard user={props.user} item={item}></RecipeOfDayCard>
-        </View>
-    )
+    let [errorThing, setErrorThing] = useState(false);
 
     const getFunky = async () => {
+        setVisible(false)
         let response;
-
+        let searchStuffThingy = {number: '1'}
         try {
-            response = await axios.get(`https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random`, {
+            response = await axios.get('https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random', {
                 headers: {
                     'X-RapidAPI-Key': 'e88f97dbf0msh4681d08f479894dp1dba02jsn142a43a9e977',
                     'X-RapidAPI-Host': 'spoonacular-recipe-food-nutrition-v1.p.rapidapi.com'
                 },
-                params: {number: 1}
-            }).then((res) => {setRandomRecipe(res.data.results)})
+
+            }).then((res) => {
+                setRandomRecipe(res.data.recipes[0])
+                setVisible(true)
+            })
         }
         catch (e) {
-            console.log(e.message)
+            setErrorThing(true)
         }
     }
 
-    /*if (show){
-        return (
-            <SafeAreaView>
-                <Text style={{fontSize: 25, textAlign: 'center', marginTop: 20}}>Recipe of the Day</Text>
+    useEffect(() => {
+        getFunky()
+    },[])
 
-                <TouchableOpacity onPress={() => funky(props.item.id)}>
-                    <Text style={{
-                        backgroundColor: '#5fa3ef',
-                        paddingVertical: 25,
-                        paddingHorizontal: 35,
-                        textAlign: 'center',
-                        borderRadius: 10,
-                        margin: 20
-                    }}>Get Daily Recipe</Text>
-                </TouchableOpacity>
-            </SafeAreaView>
+    if (visible){
+        return(
+            <ScrollView>
+                <View>
+                    <Text style={{fontSize: 25, textAlign: 'center', marginTop: 20}}>Recipe of the Day</Text>
+
+                    <TouchableOpacity onPress={() => {getFunky()}}>
+                        <Text style={{
+                            backgroundColor: '#5fa3ef',
+                            paddingVertical: 25,
+                            paddingHorizontal: 35,
+                            textAlign: 'center',
+                            borderRadius: 10,
+                            margin: 20
+                        }}>Get Daily Recipe</Text>
+                    </TouchableOpacity>
+
+                    <RecipeOfDayCard user={props.user} item={randomRecipe}></RecipeOfDayCard>
+                </View>
+            </ScrollView>
         )
-    }*/
-
-    return(
-        <SafeAreaView>
-            <View>
-                <Text style={{fontSize: 25, textAlign: 'center', marginTop: 20}}>Recipe of the Day</Text>
-
-                <TouchableOpacity onPress={() => getFunky()}>
-                    <Text style={{
-                        backgroundColor: '#5fa3ef',
-                        paddingVertical: 25,
-                        paddingHorizontal: 35,
-                        textAlign: 'center',
-                        borderRadius: 10,
-                        margin: 20
-                    }}>Get Daily Recipe</Text>
-                </TouchableOpacity>
-
-                <FlatList data={randomRecipe} renderItem={renderItem}></FlatList>
-            </View>
-
-        </SafeAreaView>
-    )
+    } else if (errorThing){
+        return (
+            <Text>Error loading data :(</Text>
+        )
+    } else {
+        return(
+            <ScrollView>
+                <Text>loading ...</Text>
+            </ScrollView>
+        )
+    }
 }
 
 const styles = StyleSheet.create({
@@ -100,4 +93,4 @@ const styles = StyleSheet.create({
     },
   });
 
-export {HomeScreen};
+export {HomeScreen}
